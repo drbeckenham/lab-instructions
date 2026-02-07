@@ -1,0 +1,505 @@
+---
+title: "Lab 04 - La Quinta is Spanish for next to Denny's, Pt. 1"
+subtitle: "Visualizing spatial data"
+author: "Your Name"
+output: 
+  tufte::tufte_handout:
+    latex_engine: xelatex
+    highlight: pygments
+    keep_tex: true
+    citation_package: natbib
+  tufte::tufte_html:
+    css: ../lab.css
+    tufte_variant: "envisioned"
+    highlight: pygments
+link-citations: true
+---
+```{r include = FALSE}
+knitr::opts_chunk$set(eval = FALSE)
+```
+```{r fig.margin = TRUE, echo = FALSE, eval = TRUE}
+knitr::include_graphics("img/mitch-hedgeberg-lqd.jpg")
+```
+
+## Introduction
+
+Have you ever taken a road trip in the US and thought to yourself "I wonder what La Quinta means". Well, the late comedian [Mitch Hedberg](https://en.wikipedia.org/wiki/Mitch_Hedberg) thinks it's Spanish for *next to Denny's*.
+
+If you're not familiar with these two establishments, [Denny's](https://www.dennys.com/) is a casual diner chain that is open 24 hours and [La Quinta Inn and Suites](http://www.lq.com/) is a hotel chain.
+
+These two establishments tend to be clustered together, or at least this observation is a joke made famous by Mitch Hedberg. In this lab we explore the validity of this joke and along the way learn some more data wrangling and tips for visualizing spatial data.
+
+The inspiration for this lab comes from a blog post by John Reiser on his *new jersey geographer* blog. You can read that analysis [here](http://njgeo.org/2014/01/30/mitch-hedberg-and-gis/). Reiser's blog post focuses on scraping data from Denny's and La Quinta Inn and Suites websites using Python. In this lab we focus on visualization and analysis of these data. However note that the data scraping was also done in R, and we will discuss web scraping using R later in the course. But for now we focus on the data that has already been scraped and tidied for you.
+
+**Estimated time:** 90-120 minutes
+
+## Learning Goals
+
+By the end of this lab, you will be able to:
+
+- Work with spatial data (latitude and longitude coordinates)
+- Filter data based on categorical variables
+- Join datasets using `inner_join()`
+- Use `case_when()` for complex conditional logic
+- Create maps using scatterplots with geographic coordinates
+- Calculate rates (locations per area)
+- Interpret spatial visualizations
+
+## Prerequisites
+
+Before you begin, make sure you have:
+
+- ✅ Completed Labs 01-03
+- ✅ Watched lectures on data wrangling and joins
+- ✅ Forked the lab-instructions repository
+- ✅ Understand the basics of latitude and longitude
+
+**Note on spatial data:** Latitude and longitude are coordinates that specify locations on Earth's surface. Latitude runs North-South (higher values = further north), and longitude runs East-West (in the US, longitude values are negative, with more negative = further west).
+
+---
+
+# Getting Started
+
+Navigate to your forked `lab-instructions` repository in JupyterHub, open the `Lab04` folder, and open the R Markdown document `lab-04.Rmd`.
+
+## Verify Your Setup
+
+Before proceeding:
+
+  Step 1. Open `lab-04.Rmd` in RStudio
+  
+  Step 2. Check that the Git pane shows YOUR username (not the course organization)
+  
+  Step 3. Click **Knit** to make sure the document compiles
+
+## Warm Up
+
+Before we introduce the data, let's warm up with some simple exercises.
+
+**Step 1:** Update the YAML, changing the author name to your name.
+
+**Step 2:** Knit the document.
+
+**Step 3:** Commit your changes with message "Updated author name".
+
+**Step 4:** Push to GitHub and verify the changes are visible in your repo.
+
+🧶 ✅ ⬆️ **Knit, commit with message "Completed warm up", and push your changes.**
+
+---
+
+## Packages
+
+We'll use the **tidyverse** package for much of the data wrangling and visualisation and the data lives in the **dsbox** package. These packages are already installed for you. You can load them by running the following in your Console:
+```{r load-packages, message = FALSE, eval = TRUE}
+library(tidyverse) 
+library(dsbox) 
+```
+
+## Data
+
+The datasets we'll use are called `dennys` and `laquinta` from the **dsbox** package. Note that these data were scraped from [here](https://locations.dennys.com/) and [here](https://www.lq.com/en/findandbook/hotel-listings.html), respectively.
+
+Since the datasets are distributed with the package, we don't need to load them separately; they become available to us when we load the package. You can find out more about the datasets by inspecting their documentation, which you can access by running `?dennys` and `?laquinta` in the Console or using the Help menu in RStudio to search for `dennys` or `laquinta`. You can also find this information [here](https://rstudio-education.github.io/dsbox/reference/dennys.html) and [here](https://rstudio-education.github.io/dsbox/reference/laquinta.html).
+
+To help with our analysis we will also use a dataset on US states, which is located in your repository's `data` folder.
+```{r load-states, eval = TRUE}
+states <- read_csv("data/states.csv")
+```
+
+Each observation in this dataset represents a state, including DC. Along with the name of the state we have the two-letter abbreviation and we have the geographic area of the state (in square miles).
+
+**✓ Checkpoint:** Run `glimpse(dennys)`, `glimpse(laquinta)`, and `glimpse(states)` in your Console to verify all datasets loaded correctly.
+
+---
+
+# Exercises
+
+## Exploring the Data
+
+## Exercise 1
+
+What are the dimensions of the Denny's dataset? What does each row in the dataset represent? What are the variables?
+
+**Use inline code to report dimensions.** In your narrative text, you can use inline R code with the functions `nrow()` and `ncol()` to report the number of rows and columns.
+
+**Your answer:** The Denny's dataset has _____ rows and _____ columns. Each row represents _____. The variables are _____.
+
+**Hint:** Run `glimpse(dennys)` or `?dennys` to see variable descriptions.
+
+---
+
+## Exercise 2
+
+What are the dimensions of the La Quinta dataset? What does each row in the dataset represent? What are the variables?
+
+**Your answer:** The La Quinta dataset has _____ rows and _____ columns. Each row represents _____. The variables are _____.
+
+🧶 ✅ ⬆️ **Knit, commit with message "Completed Exercises 1-2", and push your changes.**
+
+---
+
+## Identifying Locations Outside the US
+
+We would like to limit our analysis to Denny's and La Quinta locations in the United States.
+
+## Exercise 3
+
+Take a look at the websites that the data come from (linked above). Are there any La Quinta locations outside of the US? If so, which countries? What about Denny's?
+
+**Browse the websites and list the countries:**
+
+**La Quinta locations outside the US:**
+- 
+- 
+- 
+
+**Denny's locations outside the US:**
+- 
+- 
+- 
+
+---
+
+## Exercise 4
+
+Now take a look at the data (use `View(dennys)` and `View(laquinta)` in the Console). What would be some ways of determining whether or not either establishment has any locations outside the US using just the data (and not the websites)? Don't worry about whether you know how to implement this, just brainstorm some ideas.
+
+**Your ideas:**
+- 
+- 
+- 
+
+---
+
+We will determine whether or not the establishment has a location outside the US using the `state` variable in the `dennys` and `laquinta` datasets. We know exactly which states are in the US, and we have this information in the `states` dataframe we loaded.
+
+## Exercise 5
+
+Find the Denny's locations that are outside the US, if any. To do so, filter the Denny's locations for observations where `state` is not in `states$abbreviation`. The code for this is given below. 
+```{marginfigure}
+The `%in%` operator checks if values are in a vector. The `!` operator means "not".
+```
+
+
+```{r dennys-outside-us, eval = TRUE}
+dennys %>%
+  filter(!(state %in% states$abbreviation))
+```
+
+**How many Denny's locations are outside the US?** _____
+
+**If there are any, which state/province codes appear?** _____
+
+---
+
+## Exercise 6
+
+Add a country variable to the Denny's dataset and set all observations equal to "United States". 
+
+**Important:** Notice that we use `dennys <-` at the beginning. This saves the result back to `dennys`, overwriting the old version with the new version that includes the `country` variable. If we don't do this, the new variable will only exist temporarily and won't be saved.
+```{marginfigure}
+The `<-` assignment operator saves the result. Without it, R will display the result but not save it!
+```
+
+**Complete the code:**
+```{r add-dennys-country, eval = FALSE}
+# Remember to change eval=FALSE to eval=TRUE!
+dennys <- dennys %>%
+  mutate(___ = "___")
+```
+
+**What this does:**
+
+  Step 1. Takes the `dennys` dataset
+  
+  Step 2. Adds a new variable called `country` with the value "United States" for all rows
+  
+  Step 3. Saves the result back to `dennys` (replacing the old version)
+
+**Verify it worked:** 
+
+- Run `names(dennys)` in your Console - you should see `country` in the list
+- Run `count(dennys, country)` - all observations should show "United States"
+
+---
+
+## Exercise 7
+
+Find the La Quinta locations that are outside the US, and figure out which country they are in. This might require some googling. Take notes - you will need to use this information in the next exercise.
+```{r laquinta-outside-us, eval = TRUE}
+laquinta %>%
+  filter(!(state %in% states$abbreviation))
+```
+
+**Record your findings:**
+
+| State Code | Country |
+|:-----------|:--------|
+| ON         |         |
+| BC         |         |
+| ANT        |         |
+| AG         |         |
+| QR         |         |
+| CH         |         |
+| NL         |         |
+| VE         |         |
+| PU         |         |
+| SL         |         |
+
+**Hint:** Google the state codes along with "La Quinta" to find out which countries they're in.
+
+---
+
+## Exercise 8
+
+Add a country variable to the La Quinta dataset. Use the `case_when()` function to populate this variable based on the state codes. You'll need to refer to your notes from Exercise 7 about which country the non-US locations are in.
+
+**Complete the code:**
+```{r add-laquinta-country, eval = FALSE}
+# Remember to change eval=FALSE to eval=TRUE!
+laquinta <- laquinta %>%
+  mutate(country = case_when(
+    state %in% state.abb     ~ "United States",
+    state %in% c("ON", "BC") ~ "___",
+    state == "ANT"           ~ "___",
+    state %in% c("AG", "QR", "CH", "NL", "VE", "PU", "SL") ~ "___"
+  ))
+```
+
+**Hint:** 
+
+- `state.abb` is a built-in R vector containing all US state abbreviations
+- Based on your research, fill in the country names (likely "Canada", "Colombia", and "Mexico")
+
+**Why do we need `laquinta <-`?**
+
+Without the assignment, the code would create a new dataset with the `country` variable, display it, and then throw it away. By using `laquinta <-`, we save the new version back to `laquinta` so we can use it in future exercises.
+
+**Verify it worked:** Run `count(laquinta, country)` in your Console. You should see multiple countries listed with their counts.
+
+
+🧶 ✅ ⬆️ **Knit, commit with message "Completed Exercises 7-8", and push your changes.**
+
+---
+
+## Analyzing US Locations Only
+
+Going forward we will work with the data from the United States only. All Denny's locations are in the United States, so we don't need to worry about them. However we do need to filter the La Quinta dataset for locations in United States.
+```{r filter-us-laquinta, eval = FALSE}
+laquinta %>%
+  filter(country == "United States")
+```
+
+## Exercise 9
+
+Which states have the most and fewest Denny's locations? What about La Quinta? Is this surprising? Why or why not?
+
+**First, count locations by state:**
+```{r count-by-state, eval = FALSE}
+# Remember to change eval=FALSE to eval=TRUE!
+
+# Denny's by state
+dennys %>%
+  count(___) %>%
+  arrange(desc(___))
+
+# La Quinta by state
+laquinta %>%
+  count(___) %>%
+  arrange(desc(___))
+```
+
+**Your findings:**
+
+**Denny's:**
+
+- State with most locations: _____
+- State with fewest locations: _____
+
+**La Quinta:**
+
+- State with most locations: _____
+- State with fewest locations: _____
+
+**Is this surprising? Why or why not?**
+
+
+
+---
+
+## Calculating Density
+
+Next, let's calculate which states have the most Denny's locations *per thousand square miles*. This requires *joining* information from the frequency tables you created in Exercise 9 with information from the `states` data frame.
+
+First, we count how many observations are in each state, which will give us a data frame with two variables: `state` and `n`. Then, we join this data frame with the `states` data frame. However note that the variable in the `states` data frame that has the two-letter abbreviations is called `abbreviation`. So when we're joining the two data frames we specify that the `state` variable from the Denny's data should be matched by the `abbreviation` variable from the `states` data:
+
+```{r dennys-join-example, eval = TRUE}
+dennys %>%
+  count(state) %>%
+  inner_join(states, by = c("state" = "abbreviation"))
+```
+
+**Run this code in your Console and examine the output before proceeding.**
+
+---
+
+## Exercise 10
+
+Which states have the most Denny's locations per thousand square miles? What about La Quinta?
+
+**Build on the code above to calculate density:**
+```{r dennys-density, eval = FALSE}
+# Remember to change eval=FALSE to eval=TRUE!
+dennys %>%
+  count(state) %>%
+  inner_join(states, by = c("state" = "abbreviation")) %>%
+  mutate(density = ___ / ___ * 1000) %>%
+  arrange(desc(___))
+```
+
+**Hint:** Density = number of locations / area * 1000
+
+**Now do the same for La Quinta:**
+```{r laquinta-density, eval = FALSE}
+# Remember to change eval=FALSE to eval=TRUE!
+# Your code here
+```
+
+**Your findings:**
+
+**Denny's:**
+
+- State with highest density: _____
+- Density value: _____
+
+**La Quinta:**
+
+- State with highest density: _____
+- Density value: _____
+
+🧶 ✅ ⬆️ **Knit, commit with message "Completed Exercises 9-10", and push your changes.**
+
+---
+
+## Visualizing Spatial Data
+
+Next, we put the two datasets together into a single data frame. However before we do so, we need to add an identifier variable. We'll call this `establishment` and set the value to "Denny's" and "La Quinta" for the `dennys` and `laquinta` data frames, respectively.
+```{r add-establishment, eval = TRUE}
+dennys <- dennys %>%
+  mutate(establishment = "Denny's")
+
+laquinta <- laquinta %>%
+  mutate(establishment = "La Quinta")
+```
+
+Since the two data frames have the same columns, we can easily bind them with the `bind_rows()` function:
+
+```{r bind-data, eval = TRUE}
+dn_lq <- bind_rows(dennys, laquinta)
+```
+
+We can plot the locations of the two establishments using a scatter plot, and color the points by the establishment type. Note that the longitude is plotted on the x-axis and the latitude on the y-axis.
+
+```{r plot-all-locations, eval = FALSE}
+ggplot(dn_lq, mapping = aes(x = longitude, y = latitude, color = establishment)) +
+  geom_point()
+```
+
+**What this plot shows:** Each point represents a location. The x-axis (longitude) represents how far east/west, and the y-axis (latitude) represents how far north/south. You should be able to see the rough shape of the United States!
+
+---
+
+## Exercise 11
+
+Filter the data for observations in North Carolina only, and recreate the plot. You should also adjust the transparency of the points by setting the `alpha` level, so that it's easier to see the overplotted ones. Visually, does Mitch Hedberg's joke appear to hold here?
+
+**Create the filtered plot:**
+
+```{r nc-plot, eval = FALSE}
+# Remember to change eval=FALSE to eval=TRUE!
+dn_lq %>%
+  filter(___ == "NC") %>%
+  ggplot(mapping = aes(x = ___, y = ___, color = ___)) +
+  geom_point(alpha = ___) +
+  labs(
+    title = "___",
+    x = "___",
+    y = "___"
+  )
+```
+
+**Try different alpha values like 0.3, 0.5, or 0.7 to see which works best.**
+
+**Does Mitch Hedberg's joke appear to hold in North Carolina?** (Are Denny's and La Quinta locations close together?)
+
+
+
+---
+
+## Exercise 12
+
+Now filter the data for observations in Texas only, and recreate the plot with an appropriate alpha level. Visually, does Mitch Hedberg's joke appear to hold here?
+
+```{r texas-plot, eval = FALSE}
+# Remember to change eval=FALSE to eval=TRUE!
+# Your code here (adapt from Exercise 11)
+```
+
+**Does Mitch Hedberg's joke appear to hold in Texas?**
+
+
+
+**Compare North Carolina and Texas: In which state does the joke seem more accurate?**
+
+
+
+
+🧶 ✅ ⬆️ **Knit, commit with message "Completed Exercises 11-12", and push your changes.**
+
+---
+
+## Common Errors and Troubleshooting
+
+**Data wrangling errors:**
+
+- **Error: "object 'dennys' not found"** → Make sure you ran the code chunks that load the packages and create the data frames
+- **`inner_join()` not working** → Check that you're specifying the correct column names in the `by` argument
+- **`case_when()` not covering all cases** → Make sure every possible value is accounted for, or add a final `TRUE ~ "Other"` case
+- **Filter not working** → Remember `==` for equality, and `%in%` for checking if values are in a vector
+
+**Visualization errors:**
+
+- **Points all bunched together** → This is overplotting - use `alpha` to add transparency
+- **Map doesn't look like expected geography** → Make sure longitude is on x-axis and latitude is on y-axis
+- **Colors not showing** → Make sure `color = establishment` is inside `aes()`
+- **Plot is too small** → Adjust `fig.width` and `fig.height` in your chunk options
+
+**General issues:**
+
+- **Code chunk not running** → Make sure you changed `eval=FALSE` to `eval=TRUE`
+- **Join produces unexpected results** → Check that your `by` argument correctly matches the column names in both datasets
+
+**Assignment errors:**
+
+- **New variable not appearing in dataset** → Make sure you used `<-` to save the result back to the dataset name
+- **Error: "object has no column named 'country'"** → You forgot to assign the mutated dataset back with `<-`
+
+---
+
+
+**Key insight:** While Mitch Hedberg's joke is funny, the data shows varying patterns across different states. Some states show closer clustering between Denny's and La Quinta locations than others. In the next lab, we'll take a more quantitative approach to measuring these distances!
+
+---
+
+**To submit to Canvas:**
+
+Step 1.  In RStudio, click the **Knit** dropdown menu (next to the Knit button)
+
+Step 2.  Select **Knit to tufte_handout** to generate a PDF
+
+Step 3.  Download the PDF file from the Files pane
+
+Step 4.  Upload the PDF to Canvas
+
+**✓ Final Checkpoint:** Visit your GitHub repo one more time to confirm all your work is there. We will grade what we see in your repo on GitHub!

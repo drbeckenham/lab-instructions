@@ -1,0 +1,425 @@
+---
+title: "Lab 02 - Global plastic waste"
+author: "[Your Name]"
+output: 
+  tufte::tufte_handout:
+    latex_engine: xelatex
+    highlight: pygments
+    keep_tex: true
+    citation_package: natbib
+  tufte::tufte_html:
+    css: ../lab.css
+    tufte_variant: "envisioned"
+    highlight: pygments
+link-citations: true
+---
+```{r include = FALSE}
+knitr::opts_chunk$set(eval = FALSE)
+```
+
+## Introduction
+
+Plastic pollution is a major and growing problem, negatively affecting oceans and wildlife health. [Our World in Data](https://ourworldindata.org/plastic-pollution) has a lot of great data at various levels including globally, per country, and over time. For this lab we focus on data from 2010.
+
+Additionally, National Geographic ran a data visualization communication contest on plastic waste as seen [here](https://www.nationalgeographic.org/funding-opportunities/innovation-challenges/plastic/dataviz/).
+
+This lab builds on skills from Lab 01. You'll get more practice with ggplot2, learn about different types of visualizations, and explore a real-world dataset.
+
+**Estimated time:** 90-120 minutes
+
+## Learning Goals
+
+By the end of this lab, you will be able to:
+
+- Create and interpret histograms and density plots
+- Use faceting to compare distributions across groups
+- Adjust transparency (alpha) to improve visualizations
+- Create and interpret box plots and violin plots
+- Make scatterplots to visualize relationships between variables
+- Modify aesthetics (color, fill) to enhance plots
+- Build complex multi-layered visualizations
+
+## Prerequisites
+
+Before you begin, make sure you have:
+
+- Completed Lab 01
+- Watched the data visualization lecture
+- Forked the lab-instructions repository
+- Feel comfortable with the knit/commit/push workflow
+
+# Getting Started
+
+Navigate to your forked `lab-instructions` repository in JupyterHub, open the `Lab02` folder, and open the R Markdown document `lab-02.Rmd`.
+
+## Verify Your Setup
+
+Before proceeding:
+
+1. Open `lab-02.Rmd` in RStudio
+2. Check that the Git pane shows YOUR username (not the course organization)
+3. Click **Knit** to make sure the document compiles
+
+**If you see errors or can't find the file, ask for help before continuing!**
+
+## Packages
+
+We'll use the **tidyverse** package for this analysis. Run the following code in the Console to load this package.
+```{r load-packages, message=FALSE, eval=TRUE}
+library(tidyverse)
+```
+
+## Data
+
+The dataset for this assignment can be found as a csv file in the `data` folder of your repository. You can read it in using the following.
+```{r load-data, message=FALSE, eval=TRUE}
+plastic_waste <- read_csv("data/plastic-waste.csv")
+```
+
+The variable descriptions are as follows:
+
+-   `code`: 3 Letter country code
+-   `entity`: Country name
+-   `continent`: Continent name
+-   `year`: Year
+-   `gdp_per_cap`: GDP per capita constant 2011 international \$, rate
+-   `plastic_waste_per_cap`: Amount of plastic waste per capita in kg/day
+-   `mismanaged_plastic_waste_per_cap`: Amount of mismanaged plastic waste per capita in kg/day
+-   `mismanaged_plastic_waste`: Tonnes of mismanaged plastic waste
+-   `coastal_pop`: Number of individuals living on/near coast
+-   `total_pop`: Total population according to Gapminder
+
+# Warm Up
+
+Before diving into the exercises, let's make sure you're familiar with the RStudio environment and the data.
+
+**Question 1:** Without looking, can you name the four panes in RStudio and briefly describe their purpose?
+
+**Your answer:**
+
+
+**Question 2:** Verify that the dataset has loaded into the Environment pane. How many observations are in the dataset?
+
+**Hint:** Look in the Environment pane, or run `nrow(plastic_waste)` in the Console, or click on the dataset name to view it.
+
+**Your answer:** The dataset has _____ observations.
+
+**Question 3:** Have a quick look at the data using `View(plastic_waste)` in the Console. You'll notice that some cells contain `NA`. What does `NA` mean in R?
+
+**Hint:** Run `?NA` in the Console to see the documentation.
+
+**Your answer:**
+
+
+
+**✓ Checkpoint:** Make sure the data loaded correctly and you can see it in your Environment pane before continuing.
+
+🧶 ✅ ⬆️ **Knit, commit with message "Completed warm up", and push your changes.**
+
+---
+
+# Exercises
+
+## Exploring Distributions
+
+Let's start by taking a look at the distribution of plastic waste per capita in 2010.
+```{r plastic_waste_per_cap-hist, eval=TRUE}
+ggplot(data = plastic_waste, aes(x = plastic_waste_per_cap)) +
+  geom_histogram(binwidth = 0.2)
+```
+
+One country stands out as an unusual observation at the top of the distribution. One way of identifying this country is to filter the data for countries where plastic waste per capita is greater than 3.5 kg/person.
+```{r plastic_waste_per_cap-max, eval=TRUE}
+plastic_waste %>%
+  filter(plastic_waste_per_cap > 3.5)
+```
+
+Did you expect this result? Trinidad and Tobago has unusually high plastic waste per capita. You might research why this is the case!
+
+---
+
+## Exercise 1
+
+Plot, using histograms, the distribution of plastic waste per capita faceted by continent. What can you say about how the continents compare to each other in terms of their plastic waste per capita?
+
+**Reminder:** Faceting creates separate plots for each group. Use `facet_wrap(~variable)` to facet by a categorical variable.
+```{r plastic-waste-continent, eval=FALSE}
+# Remember to change eval=FALSE to eval=TRUE after filling in the blanks!
+ggplot(data = plastic_waste, 
+       aes(x = ___)) +
+  geom_histogram(binwidth = ___) +
+  facet_wrap(~___)
+```
+
+**Interpretation:** Compare the continents in terms of their plastic waste per capita. Consider:
+
+- Which continent has the highest typical plastic waste per capita?
+- Which has the lowest?
+- Which continent shows the most variation?
+
+**Your answer:**
+
+
+---
+
+## Density Plots
+
+Another way of visualizing numerical data is using density plots. Density plots show the distribution as a smooth curve rather than bars.
+```{r plastic_waste_per_cap-dens, eval=TRUE}
+ggplot(data = plastic_waste, aes(x = plastic_waste_per_cap)) +
+  geom_density()
+```
+
+We can compare distributions across continents by coloring density curves by continent.
+```{r plastic_waste_per_cap-dens-color, eval=TRUE}
+ggplot(data = plastic_waste, 
+       mapping = aes(x = plastic_waste_per_cap, 
+                     color = continent)) +
+  geom_density()
+```
+
+The resulting plot may be a little difficult to read, so let's also fill the curves in with colors as well.
+```{r plastic_waste_per_cap-dens-color-fill, eval=TRUE}
+ggplot(data = plastic_waste, 
+       mapping = aes(x = plastic_waste_per_cap, 
+                     color = continent, 
+                     fill = continent)) +
+  geom_density()
+```
+
+The overlapping colors make it difficult to tell what's happening with the distributions in continents plotted first. We can change the transparency level of the fill color to help with this. The `alpha` argument takes values between 0 and 1: 0 is completely transparent and 1 is completely opaque.
+```{r plastic_waste_per_cap-dens-color-fill-alpha, eval=TRUE}
+ggplot(data = plastic_waste, 
+       mapping = aes(x = plastic_waste_per_cap, 
+                     color = continent, 
+                     fill = continent)) +
+  geom_density(alpha = 0.7)
+```
+
+This still doesn't look great...
+
+---
+
+## Exercise 2
+
+Recreate the density plots above using a different (lower) alpha level that works better for displaying the density curves for all continents.
+
+**Try alpha values like 0.3, 0.4, or 0.5 to see which works best.**
+```{r plastic-waste-density-alpha, eval=FALSE}
+# Remember to change eval=FALSE to eval=TRUE!
+ggplot(data = plastic_waste, 
+       mapping = aes(x = plastic_waste_per_cap, 
+                     color = continent, 
+                     fill = continent)) +
+  geom_density(alpha = ___)
+```
+
+**Which alpha level did you choose and why?**
+
+
+---
+
+## Exercise 3
+
+Describe why we defined the `color` and `fill` of the curves by mapping aesthetics of the plot (inside `aes()`) but we defined the `alpha` level as a characteristic of the plotting geom (inside `geom_density()`).
+
+**Hint:** Think about what varies by data vs. what is constant across all data points.
+
+**Your answer:**
+
+
+🧶 ✅ ⬆️ **Knit, commit with message "Completed Exercises 1-3", and push your changes.**
+
+---
+
+## Box Plots and Violin Plots
+
+Another way to visualize this relationship is using side-by-side box plots.
+```{r plastic_waste_per_cap-box, eval=TRUE}
+ggplot(data = plastic_waste, 
+       mapping = aes(x = continent, 
+                     y = plastic_waste_per_cap)) +
+  geom_boxplot()
+```
+
+---
+
+## Exercise 4
+
+Convert your side-by-side box plots from the previous task to [violin plots](http://ggplot2.tidyverse.org/reference/geom_violin.html). What do the violin plots reveal that box plots do not? What features are apparent in the box plots but not in the violin plots?
+
+**Hint:** Simply replace `geom_boxplot()` with `geom_violin()`.
+```{r plastic-waste-violin, eval=FALSE}
+# Remember to change eval=FALSE to eval=TRUE!
+ggplot(data = plastic_waste, 
+       mapping = aes(x = continent, 
+                     y = plastic_waste_per_cap)) +
+  geom___()
+```
+
+**What do violin plots reveal that box plots do not?**
+
+
+
+**What features are apparent in box plots but not in violin plots?**
+
+
+---
+
+## Scatterplots
+
+Now let's explore relationships between variables using scatterplots.
+
+## Exercise 5
+
+Visualize the relationship between plastic waste per capita and mismanaged plastic waste per capita using a scatterplot. Describe the relationship.
+
+**Reminder:** Use `geom_point()` to create scatterplots.
+```{r plastic-waste-mismanaged, eval=FALSE}
+# Remember to change eval=FALSE to eval=TRUE!
+ggplot(data = ___, 
+       mapping = aes(x = ___, 
+                     y = ___)) +
+  geom___()
+```
+
+**Describe the relationship between plastic waste per capita and mismanaged plastic waste per capita:**
+
+
+---
+
+## Exercise 6
+
+Color the points in the scatterplot by continent. Does there seem to be any clear distinctions between continents with respect to how plastic waste per capita and mismanaged plastic waste per capita are associated?
+
+**Hint:** Add `color = continent` to your `aes()` mapping.
+```{r plastic-waste-mismanaged-continent, eval=FALSE}
+# Remember to change eval=FALSE to eval=TRUE!
+ggplot(data = plastic_waste, 
+       mapping = aes(x = plastic_waste_per_cap, 
+                     y = mismanaged_plastic_waste_per_cap,
+                     color = ___)) +
+  geom_point()
+```
+
+**Are there clear distinctions between continents?**
+
+
+
+🧶 ✅ ⬆️ **Knit, commit with message "Completed Exercises 4-6", and push your changes.**
+
+---
+
+## Exercise 7
+
+Visualize the relationship between plastic waste per capita and total population as well as plastic waste per capita and coastal population. You will need to make two separate plots. Do either of these pairs of variables appear to be more strongly linearly associated?
+
+**Plot 1: Plastic waste per capita vs. total population**
+```{r plastic-waste-population, eval=FALSE}
+# Remember to change eval=FALSE to eval=TRUE!
+ggplot(data = ___, 
+       mapping = aes(x = ___, 
+                     y = ___)) +
+  geom_point()
+```
+
+**Plot 2: Plastic waste per capita vs. coastal population**
+```{r plastic-waste-coastal, eval=FALSE}
+# Remember to change eval=FALSE to eval=TRUE!
+ggplot(data = ___, 
+       mapping = aes(x = ___, 
+                     y = ___)) +
+  geom_point()
+```
+
+**Which pair of variables appears to be more strongly linearly associated?**
+
+
+
+🧶 ✅ ⬆️ **Knit, commit with message "Completed Exercise 7", and push your changes.**
+
+---
+
+## Challenge Exercise
+
+## Exercise 8
+
+Recreate the following plot, and interpret what you see in context of the data.
+```{r echo=FALSE, message=FALSE, eval=TRUE, warning=FALSE}
+plastic_waste %>% 
+  mutate(coastal_pop_prop = coastal_pop / total_pop) %>%
+  filter(plastic_waste_per_cap < 3) %>%
+  ggplot(aes(x = coastal_pop_prop, y = plastic_waste_per_cap, color = continent)) + 
+    geom_point() +
+    geom_smooth(color = "black") +
+    scale_color_viridis_d() +
+    labs(x = "Coastal population proportion (Coastal / total population)", 
+         y = "Plastic waste per capita ", 
+         color = "Continent",
+         title = "Plastic waste vs. coastal population proportion",
+         subtitle = "by continent") +
+    theme_minimal()
+```
+
+**This plot requires several steps:**
+
+1. Create a new variable `coastal_pop_prop` = `coastal_pop` / `total_pop`
+2. Filter for observations where `plastic_waste_per_cap` < 3
+3. Create a scatterplot with the new variable on x-axis
+4. Add a smooth curve with `geom_smooth()`
+5. Use `scale_color_viridis_d()` for the color scale
+6. Add appropriate labels
+
+**Build it step by step:**
+```{r recreate-plot, eval=FALSE}
+# Remember to change eval=FALSE to eval=TRUE!
+plastic_waste %>% 
+  mutate(coastal_pop_prop = ___ / ___) %>%
+  filter(___ < ___) %>%
+  ggplot(aes(x = ___, y = ___, color = ___)) + 
+    geom_point() +
+    geom_smooth(color = "black") +
+    scale_color_viridis_d() +
+    labs(x = "___", 
+         y = "___", 
+         color = "___",
+         title = "___",
+         subtitle = "___") +
+    theme_minimal()
+```
+
+**Interpretation:** What does this plot reveal about the relationship between coastal population proportion and plastic waste per capita? Does the relationship differ across continents?
+
+
+🧶 ✅ ⬆️ **Knit, commit with message "Completed Exercise 8", and push your changes.**
+
+---
+
+## Common Errors and Troubleshooting
+
+**Visualization errors:**
+
+- **Plot not showing** → Make sure you changed `eval=FALSE` to `eval=TRUE` in the chunk options
+- **Error: "object not found"** → Check spelling of variable names (case-sensitive!)
+- **Error: "could not find function 'geom_violin'"** → Make sure tidyverse is loaded
+- **Weird looking plots** → Try different alpha values, binwidths, or figure sizes
+
+**Data errors:**
+
+- **Can't load data** → Make sure the `data` folder is in the same directory as your .Rmd file
+- **NA values causing issues** → This is normal for this dataset; R handles them appropriately in plots
+
+**Git/GitHub errors:**
+
+- **Can't push** → Make sure you committed first
+- **Changes not showing on GitHub** → Check that you pushed to YOUR fork, not the course repo
+
+
+**To submit to Canvas:**
+
+1.  In RStudio, click the **Knit** dropdown menu (next to the Knit button)
+2.  Select **Knit to tufte_handout** to generate a PDF
+3.  Download the PDF file from the Files pane
+4.  Upload the PDF to Canvas
+
+**Great work! Make sure all your changes are committed and pushed to GitHub.**
