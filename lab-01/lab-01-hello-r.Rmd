@@ -232,13 +232,13 @@ dino_data %>%
 
 **Step 1: Filter for star data**
 ```{r star-data, eval = FALSE}
-star_data %
-  filter(dataset == ___)
+star_data <- datasaurus_dozen %>%
+  filter(dataset == "star")
 ```
 
 **Step 2: Create the plot**
 ```{r star-plot, fig.fullwidth=TRUE, eval = FALSE}
-ggplot(data = ___, mapping = aes(x = x, y = y)) +
+ggplot(data = star_data, mapping = aes(x = x, y = y)) +
   geom_point()
 ```
 
@@ -250,9 +250,9 @@ star_data %>%
 
 **Write your answers:**
 
-- The correlation coefficient for the star dataset is: 
+- The correlation coefficient for the star dataset is: -0.0629611
 
-- Compared to the dino dataset (r = -0.06447185), the star dataset's correlation is: 
+- Compared to the dino dataset (r = -0.06447185), the star dataset's correlation is: larger
 
 🧶 ✅ ⬆️ *This is another good place to pause, knit, commit changes with the commit message "Added answer for Ex 3", and push. Make sure to commit and push all changed files so that your Git pane is cleared up afterwards.*
 

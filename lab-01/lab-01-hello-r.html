@@ -543,18 +543,18 @@ that we will call <code>r</code> as the <code>cor</code>relation between
 </ol>
 <p><strong>Your task:</strong> Adapt the code from Exercise 2, changing <code>&quot;dino&quot;</code> to <code>&quot;star&quot;</code>.</p>
 <p><strong>Step 1: Filter for star data</strong></p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>star_data %</span>
-<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>  <span class="fu">filter</span>(dataset <span class="sc">==</span> ___)</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>star_data <span class="ot">&lt;-</span> datasaurus_dozen <span class="sc">%&gt;%</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>  <span class="fu">filter</span>(dataset <span class="sc">==</span> <span class="st">&quot;star&quot;</span>)</span></code></pre></div>
 <p><strong>Step 2: Create the plot</strong></p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> ___, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span></span>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> star_data, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span></span>
 <span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code></pre></div>
 <p><strong>Step 3: Calculate correlation</strong></p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>star_data <span class="sc">%&gt;%</span></span>
 <span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">r =</span> <span class="fu">cor</span>(x, y))</span></code></pre></div>
 <p><strong>Write your answers:</strong></p>
 <ul>
-<li><p>The correlation coefficient for the star dataset is:</p></li>
-<li><p>Compared to the dino dataset (r = -0.06447185), the star dataset’s correlation is:</p></li>
+<li><p>The correlation coefficient for the star dataset is: -0.0629611</p></li>
+<li><p>Compared to the dino dataset (r = -0.06447185), the star dataset’s correlation is: larger</p></li>
 </ul>
 <p>🧶 ✅ ⬆️ <em>This is another good place to pause, knit, commit changes with the commit message “Added answer for Ex 3”, and push. Make sure to commit and push all changed files so that your Git pane is cleared up afterwards.</em></p>
 <ol start="4" style="list-style-type: decimal">
