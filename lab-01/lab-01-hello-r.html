@@ -562,14 +562,17 @@ that we will call <code>r</code> as the <code>cor</code>relation between
 </ol>
 <p><strong>Your task:</strong> Adapt the code from Exercises 2 and 3, changing the dataset to <code>&quot;circle&quot;</code>.</p>
 <p><strong>Filter, plot, and calculate correlation:</strong></p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="co"># Your code here</span></span></code></pre></div>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="co"># Your code here</span></span></code></pre></div>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="co"># Your code here</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>circle_data <span class="ot">&lt;-</span> datasaurus_dozen <span class="sc">%&gt;%</span></span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>  <span class="fu">filter</span>(dataset <span class="sc">==</span> <span class="st">&quot;circle&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> circle_data, <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span></span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>circle_data <span class="sc">%&gt;%</span></span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">r =</span> <span class="fu">cor</span>(x, y))</span></code></pre></div>
 <p><strong>Write your answers:</strong></p>
 <ul>
-<li><p>The correlation coefficient for the circle dataset is:</p></li>
-<li><p>Compared to the dino dataset, the circle dataset’s correlation is:</p></li>
-<li><p>What do you notice about the correlation coefficients for dino, star, and circle?</p></li>
+<li><p>The correlation coefficient for the circle dataset is: -0.06834336</p></li>
+<li><p>Compared to the dino dataset, the circle dataset’s correlation is:smaller</p></li>
+<li><p>What do you notice about the correlation coefficients for dino, star, and circle?The circle is smaller and shows three outliers. The other datasets do not shw outliers, and are move complex.</p></li>
 </ul>
 <p>🧶 ✅ ⬆️ <em>You should pause again, commit changes with the commit message “Added answer for Ex 4”, and push. Make sure to commit and push all changed files so that your Git pane is cleared up afterwards.</em></p>
 <p><label for="tufte-mn-8" class="margin-toggle">⊕</label><input type="checkbox" id="tufte-mn-8" class="margin-toggle"><span class="marginnote"><span style="display: block;">Facet by the dataset variable, placing the plots in a 3 column grid,
