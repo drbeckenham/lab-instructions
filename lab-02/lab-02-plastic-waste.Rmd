@@ -2,15 +2,15 @@
 title: "Lab 02 - Global plastic waste"
 author: "Susan Beckenham"
 output: 
-  tufte::tufte_html:
-    css: ../lab.css
-    tufte_variant: "envisioned"
-    highlight: pygments
   tufte::tufte_handout:
     latex_engine: xelatex
     highlight: pygments
     keep_tex: true
     citation_package: natbib
+  tufte::tufte_html:
+    css: ../lab.css
+    tufte_variant: "envisioned"
+    highlight: pygments
 link-citations: true
 ---
 ```{r include = FALSE}
@@ -141,26 +141,26 @@ plastic_waste %>%
 
 Did you expect this result? Trinidad and Tobago has unusually high plastic waste per capita. You might research why this is the case!
 
----
+No, I was very surprised by this. I looked and it is due to high imp0rts, very poor waste management, and high use in single use products.
 
 ## Exercise 1
 
 Plot, using histograms, the distribution of plastic waste per capita faceted by continent. What can you say about how the continents compare to each other in terms of their plastic waste per capita?
 
 **Reminder:** Faceting creates separate plots for each group. Use `facet_wrap(~variable)` to facet by a categorical variable.
-```{r plastic-waste-continent, eval=FALSE}
+```{r plastic-waste-continent, eval=TRUE}
 # Remember to change eval=FALSE to eval=TRUE after filling in the blanks!
 ggplot(data = plastic_waste, 
-       aes(x = ___)) +
-  geom_histogram(binwidth = ___) +
-  facet_wrap(~___)
+       aes(x = plastic_waste_per_cap)) +
+  geom_histogram(binwidth = 50) +
+  facet_wrap(~continent)
 ```
 
 **Interpretation:** Compare the continents in terms of their plastic waste per capita. Consider:
 
-- Which continent has the highest typical plastic waste per capita?
-- Which has the lowest?
-- Which continent shows the most variation?
+- Which continent has the highest typical plastic waste per capita? Asia
+- Which has the lowest? South America
+- Which continent shows the most variation? Oceania
 
 **Your answer:**
 
@@ -216,10 +216,11 @@ ggplot(data = plastic_waste,
        mapping = aes(x = plastic_waste_per_cap, 
                      color = continent, 
                      fill = continent)) +
-  geom_density(alpha = ___)
+  geom_density(alpha = 0.4)
 ```
 
 **Which alpha level did you choose and why?**
+I choose 0.4. I felt that there is enough transparency that it was easy to see all the different slopes.
 
 
 ---
@@ -231,7 +232,7 @@ Describe why we defined the `color` and `fill` of the curves by mapping aestheti
 **Hint:** Think about what varies by data vs. what is constant across all data points.
 
 **Your answer:**
-
+The the 'color' and 'fill'mare pertinent tot he actually data. Te 'alpha' level is not important to the data, only a display option to make things easier to read.
 
 🧶 ✅ ⬆️ **Knit, commit with message "Completed Exercises 1-3", and push your changes.**
 
