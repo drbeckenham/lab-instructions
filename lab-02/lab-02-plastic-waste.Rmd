@@ -382,17 +382,17 @@ plastic_waste %>%
 ```{r recreate-plot, eval=FALSE}
 # Remember to change eval=FALSE to eval=TRUE!
 plastic_waste %>% 
-  mutate(coastal_pop_prop = ___ / ___) %>%
-  filter(___ < ___) %>%
-  ggplot(aes(x = ___, y = ___, color = ___)) + 
+  mutate(coastal_pop_prop = coastal_pop / total_pop) %>%
+  filter(plastic_waste_per_cap < 3) %>%
+  ggplot(aes(x = coastal_pop_prop, y = plastic_waste_per_cap, color = continent)) + 
     geom_point() +
     geom_smooth(color = "black") +
     scale_color_viridis_d() +
-    labs(x = "___", 
-         y = "___", 
-         color = "___",
-         title = "___",
-         subtitle = "___") +
+    labs(x = "Coastal population proportion (Coastal / total population)", 
+         y = "Plastic waste per capita ", 
+         color = "Continent",
+         title = "Plastic waste vs. coastal population proportion",
+         subtitle = "by continent") +
     theme_minimal()
 ```
 
@@ -401,7 +401,7 @@ plastic_waste %>%
 
 🧶 ✅ ⬆️ **Knit, commit with message "Completed Exercise 8", and push your changes.**
 
----
+There isn't a strong linear relationship brtween coastal_pop and plastic_waste. There ar emore differences between continents than coastal population.
 
 ## Common Errors and Troubleshooting
 
