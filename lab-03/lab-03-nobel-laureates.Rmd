@@ -1,6 +1,6 @@
 ---
 title: "Lab 03 - Nobel laureates"
-author: "[Your Name]"
+author: "Susan Beckenham"
 output: 
   tufte::tufte_html:
     css: ../lab.css
@@ -163,14 +163,18 @@ Before diving into the exercises, let's get familiar with the data.
 
 **Question 1:** How many observations and how many variables are in the dataset? Use inline code in your answer.
 
+`r nrow(nobel)`
+
+`r ncol(nobel)`
+
 **Hint:** Use   backtick r nrow(nobel) backtick  for rows and  backtick r ncol(nobel) backtick for columns in your narrative text.
 
-**Your answer:** 
+**Your answer:** There are 935 obervations or rows, and there are 26 columns or variables.
 
 **Question 2:** Run `View(nobel)` in your Console. What does each row represent?
 
 **Your answer:**
-
+Each row represents a specific winner of hte nobel prize and all their data.
 
 
 **Question 3:** Look at the data. What categories of Nobel prizes are included in this dataset?
@@ -179,7 +183,7 @@ Before diving into the exercises, let's get familiar with the data.
 
 **Your answer:**
 
-___________________________________________________________________________
+The categories include Chemistry, Economcs, Literature, Medicine, Peace, and Physics.
 
 🧶 ✅ ⬆️ **Knit, commit with message "Completed warm up", and push your changes.**
 
