@@ -383,20 +383,20 @@ In a single pipeline, filter for laureates who won their prize in the US, but we
 # Remember to change eval=FALSE to eval=TRUE!
 nobel_living_science %>%
   filter(
-    ___ == "USA",
-    ___ == "Other"
+    born_country != "USA",
+    country == "USA"
   ) %>%
-  count(___) %>%
-  arrange(desc(___))
+  count(born_country) %>%
+  arrange(desc(n))
 ```
 
 **Which country (outside the US) has produced the most Nobel laureates who won while based in the US?**
 
-
+Germany and the UK have produced the most Nobel Laureates while based in the US
 
 **How many laureates from this country won while based in the US?**
 
-
+They have both won 7.
 
 🧶 ✅ ⬆️ **Knit, commit with message "Completed Exercise 6", and push your changes.**
 
