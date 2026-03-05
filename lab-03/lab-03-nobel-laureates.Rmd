@@ -313,24 +313,24 @@ Create a new variable called `born_country_us` that has the value `"USA"` if the
 ```{marginfigure}
 **Hint:** This is very similar to how we created `country_us` earlier. You can adapt that code!
 ```
-```{r create-born-country, eval=FALSE}
+```{r create-born-country, eval=TRUE}
 # Remember to change eval=FALSE to eval=TRUE!
-nobel_living_science %
+nobel_living_science %>%
   mutate(
-    born_country_us = if_else(___ == "___", "USA", "Other")
+    born_country_us = if_else(born_country == "USA", "USA", "Other")
   )
 ```
 
 **Now count how many laureates were born in the US:**
-```{r count-born-us, eval=FALSE}
+```{r count-born-us, eval=TRUE}
 # Remember to change eval=FALSE to eval=TRUE!
 nobel_living_science %>%
-  count(___)
+  count(born_country)
 ```
 
-**How many laureates were born in the US?** _____
+**How many laureates were born in the US?** 105
 
-**How many were born in other countries?** _____
+**How many were born in other countries?** 115
 
 ---
 
@@ -345,13 +345,13 @@ Add a second variable to your visualization from Exercise 3 based on whether the
 -   Each bar should have segments for whether the laureate was born in the US or not
 
 **Build your stacked bar chart:**
-```{r nobel-stacked-bar, eval=FALSE}
+```{r nobel-stacked-bar, eval=TRUE}
 # Remember to change eval=FALSE to eval=TRUE!
 ggplot(data = nobel_living_science, 
-       aes(x = country_us, fill = ___)) +
+       aes(x = 'country_us', fill = born_country)) +
   geom_bar() +
   coord_flip() +
-  facet_wrap(~___)
+  facet_wrap(~category)
 ```
 
 **Hints:**
@@ -363,7 +363,7 @@ ggplot(data = nobel_living_science,
 
 **Your answer:**
 
-
+This view does indeed support Buzzfeed's claim. The USA, shown in salmon color, takes the largest portion of each graph.
 
 🧶 ✅ ⬆️ **Knit, commit with message "Completed Exercises 4-5", and push your changes.**
 
