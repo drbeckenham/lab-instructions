@@ -150,12 +150,13 @@ Take a look at the websites that the data come from (linked above). Are there an
 **Browse the websites and list the countries:**
 
 **La Quinta locations outside the US:**
-- 
+- Locations include Canada, Mexico, Honduras, Colombia, Chile, turkey, China, Istanbul, Turkey, United Arab Emirates, and future expansion planned in India, Nepal, and Bangladesh.
 - 
 - 
 
 **Denny's locations outside the US:**
-- 
+- I had to search outside of the given link. As of 2024, there were more than 165 international locations. These locations included:
+Canada, Mexico, Puerto Rico, Phillippines, New Zealand, Honduras, United Arab Emirates, Costa Rica, El Salvador, Guatemala, Guam, INdonesia, Curacao, United Kingdom.
 - 
 - 
 
@@ -166,7 +167,7 @@ Take a look at the websites that the data come from (linked above). Are there an
 Now take a look at the data (use `View(dennys)` and `View(laquinta)` in the Console). What would be some ways of determining whether or not either establishment has any locations outside the US using just the data (and not the websites)? Don't worry about whether you know how to implement this, just brainstorm some ideas.
 
 **Your ideas:**
-- 
+- I would search and exclude USA. The data set for LaQuinta is not ordered, so I would do that first. Dann's seems to be in order by state. I don't see other countries listed,.
 - 
 - 
 
@@ -187,9 +188,9 @@ dennys %>%
   filter(!(state %in% states$abbreviation))
 ```
 
-**How many Denny's locations are outside the US?** _____
+**How many Denny's locations are outside the US?** It shows 0, although we know that is different from our previous online search.
 
-**If there are any, which state/province codes appear?** _____
+**If there are any, which state/province codes appear?** It doesn't show anything.
 
 ---
 
@@ -203,10 +204,10 @@ The `<-` assignment operator saves the result. Without it, R will display the re
 ```
 
 **Complete the code:**
-```{r add-dennys-country, eval = FALSE}
+```{r add-dennys-country, eval = TRUE}
 # Remember to change eval=FALSE to eval=TRUE!
 dennys <- dennys %>%
-  mutate(___ = "___")
+  mutate(country = "United States")
 ```
 
 **What this does:**
@@ -261,9 +262,9 @@ Add a country variable to the La Quinta dataset. Use the `case_when()` function 
 laquinta <- laquinta %>%
   mutate(country = case_when(
     state %in% state.abb     ~ "United States",
-    state %in% c("ON", "BC") ~ "___",
-    state == "ANT"           ~ "___",
-    state %in% c("AG", "QR", "CH", "NL", "VE", "PU", "SL") ~ "___"
+    state %in% c("ON", "BC") ~ "Canada",
+    state == "ANT"           ~ "Honduras",
+    state %in% c("AG", "QR", "CH", "NL", "VE", "PU", "SL") ~ "Mexico"
   ))
 ```
 
