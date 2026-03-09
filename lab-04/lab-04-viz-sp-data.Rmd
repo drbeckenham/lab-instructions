@@ -119,11 +119,11 @@ Each observation in this dataset represents a state, including DC. Along with th
 
 ## Exercise 1
 
-What are the dimensions of the Denny's dataset? What does each row in the dataset represent? What are the variables?
+What are the dimensions of the Denny's dataset? What does each row in the dataset represent? What are the variables? There are 1643 rows and 6 columns.
 
 **Use inline code to report dimensions.** In your narrative text, you can use inline R code with the functions `nrow()` and `ncol()` to report the number of rows and columns.
 
-**Your answer:** The Denny's dataset has _____ rows and _____ columns. Each row represents _____. The variables are _____.
+**Your answer:** The Denny's dataset has 1643 rows and 6 columns. Each row represents a specific Denny's. The variables are address, city, state, zip, longitude, and latitude.
 
 **Hint:** Run `glimpse(dennys)` or `?dennys` to see variable descriptions.
 
@@ -133,7 +133,7 @@ What are the dimensions of the Denny's dataset? What does each row in the datase
 
 What are the dimensions of the La Quinta dataset? What does each row in the dataset represent? What are the variables?
 
-**Your answer:** The La Quinta dataset has _____ rows and _____ columns. Each row represents _____. The variables are _____.
+**Your answer:** The La Quinta dataset has 909 rows and 6 columns. Each row represents a specific La Quinta Inn. The variables are ddress, city, state, zip, longitude, and latitude.
 
 🧶 ✅ ⬆️ **Knit, commit with message "Completed Exercises 1-2", and push your changes.**
 
