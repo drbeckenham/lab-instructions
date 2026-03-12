@@ -15,7 +15,7 @@ output:
 link-citations: true
 ---
 ```{r include = FALSE}
-knitr::opts_chunk$set(eval = FALSE)
+knitr::opts_chunk$set(eval = TRUE)
 ```
 ```{r fig.margin = TRUE, echo = FALSE, eval = TRUE}
 knitr::include_graphics("img/mitch-hedgeberg-lqd.jpg")
@@ -257,7 +257,7 @@ laquinta %>%
 Add a country variable to the La Quinta dataset. Use the `case_when()` function to populate this variable based on the state codes. You'll need to refer to your notes from Exercise 7 about which country the non-US locations are in.
 
 **Complete the code:**
-```{r add-laquinta-country, eval = FALSE}
+```{r add-laquinta-country, eval = TRUE}
 # Remember to change eval=FALSE to eval=TRUE!
 laquinta <- laquinta %>%
   mutate(country = case_when(
@@ -287,8 +287,8 @@ Without the assignment, the code would create a new dataset with the `country` v
 ## Analyzing US Locations Only
 
 Going forward we will work with the data from the United States only. All Denny's locations are in the United States, so we don't need to worry about them. However we do need to filter the La Quinta dataset for locations in United States.
-```{r filter-us-laquinta, eval = FALSE}
-laquinta %>%
+```{r filter-us-laquinta, eval = TRUE}
+laquinta <- laquinta %>%
   filter(country == "United States")
 ```
 
@@ -297,35 +297,35 @@ laquinta %>%
 Which states have the most and fewest Denny's locations? What about La Quinta? Is this surprising? Why or why not?
 
 **First, count locations by state:**
-```{r count-by-state, eval = FALSE}
+```{r count-by-state, eval = TRUE}
 # Remember to change eval=FALSE to eval=TRUE!
 
 # Denny's by state
 dennys %>%
-  count(___) %>%
-  arrange(desc(___))
+  count(state) %>%
+  arrange(desc(n))
 
 # La Quinta by state
 laquinta %>%
-  count(___) %>%
-  arrange(desc(___))
+  count(state) %>%
+  arrange(desc(n))
 ```
 
 **Your findings:**
 
 **Denny's:**
 
-- State with most locations: _____
-- State with fewest locations: _____
+- State with most locations: California
+- State with fewest locations: Delaware
 
 **La Quinta:**
 
-- State with most locations: _____
-- State with fewest locations: _____
+- State with most locations: Texas
+- State with fewest locations: Vermont
 
 **Is this surprising? Why or why not?**
 
-
+There doesn't seem to be any correlation one with the other So, based on the initial premise of this exercise I was surprised.
 
 ---
 
@@ -347,37 +347,42 @@ dennys %>%
 
 ## Exercise 10
 
-Which states have the most Denny's locations per thousand square miles? What about La Quinta?
+
+Rhode Island. New Jersey, and Connecticut have the most Dennys per 1000 square miles. For LaQuinta, the states with the most per 1,000 miles is New Jersey, Rhode Island and Delaware.
 
 **Build on the code above to calculate density:**
-```{r dennys-density, eval = FALSE}
+```{r dennys-density, eval = TRUE}
 # Remember to change eval=FALSE to eval=TRUE!
 dennys %>%
   count(state) %>%
   inner_join(states, by = c("state" = "abbreviation")) %>%
-  mutate(density = ___ / ___ * 1000) %>%
-  arrange(desc(___))
+  mutate(density = n / area * 1000) %>%
+  arrange(desc(density))
 ```
 
 **Hint:** Density = number of locations / area * 1000
 
 **Now do the same for La Quinta:**
-```{r laquinta-density, eval = FALSE}
+```{r laquinta-density, eval = TRUE}
 # Remember to change eval=FALSE to eval=TRUE!
-# Your code here
+laquinta %>%
+  count(state) %>%
+  inner_join(states, by = c("state" = "abbreviation")) %>%
+  mutate(density = n / area * 1000) %>%
+  arrange(desc(density))
 ```
 
 **Your findings:**
 
 **Denny's:**
 
-- State with highest density: _____
-- Density value: _____
+- State with highest density: Rhode Island
+- Density value: 6.1 per 1000 miles
 
 **La Quinta:**
 
-- State with highest density: _____
-- Density value: _____
+- State with highest density: New Jersey_
+- Density value: 1.6 per 1000 miles
 
 🧶 ✅ ⬆️ **Knit, commit with message "Completed Exercises 9-10", and push your changes.**
 
@@ -417,22 +422,24 @@ Filter the data for observations in North Carolina only, and recreate the plot. 
 
 **Create the filtered plot:**
 
-```{r nc-plot, eval = FALSE}
+```{r nc-plot, eval = TRUE}
 # Remember to change eval=FALSE to eval=TRUE!
 dn_lq %>%
-  filter(___ == "NC") %>%
-  ggplot(mapping = aes(x = ___, y = ___, color = ___)) +
-  geom_point(alpha = ___) +
+  filter(state == "NC") %>%
+  ggplot(mapping = aes(x = longitude, y = latitude, color = state)) +
+  geom_point(alpha = 0.5) +
   labs(
-    title = "___",
-    x = "___",
-    y = "___"
+    title = "Denny's vs La Quinta Locations in North Carolina",
+    x = "Number of Dennys'",
+    y = "Number of La Quintas"
   )
 ```
 
 **Try different alpha values like 0.3, 0.5, or 0.7 to see which works best.**
 
 **Does Mitch Hedberg's joke appear to hold in North Carolina?** (Are Denny's and La Quinta locations close together?)
+
+It does seem to be slightly true in some circumstances. They are grouped together in clusters.
 
 
 
@@ -442,19 +449,27 @@ dn_lq %>%
 
 Now filter the data for observations in Texas only, and recreate the plot with an appropriate alpha level. Visually, does Mitch Hedberg's joke appear to hold here?
 
-```{r texas-plot, eval = FALSE}
+```{r texas-plot, eval = TRUE}
 # Remember to change eval=FALSE to eval=TRUE!
-# Your code here (adapt from Exercise 11)
+dn_lq %>%
+  filter(state == "TX") %>%
+  ggplot(mapping = aes(x = longitude, y = latitude, color = state)) +
+  geom_point(alpha = 0.7) +
+  labs(
+    title = "Denny's vs La Quinta Locations in Texas",
+    x = "Number of Dennys'",
+    y = "Number of La Quintas"
+  )
 ```
 
 **Does Mitch Hedberg's joke appear to hold in Texas?**
-
+It absolutely does! they are all clustered together, more so than in NC. Very interesting visual.
 
 
 **Compare North Carolina and Texas: In which state does the joke seem more accurate?**
 
 
-
+Oviously, the joke works a lot better in Texqs, just by examining the clustering.
 
 🧶 ✅ ⬆️ **Knit, commit with message "Completed Exercises 11-12", and push your changes.**
 
