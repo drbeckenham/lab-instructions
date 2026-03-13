@@ -463,13 +463,13 @@ dn_lq %>%
 ```
 
 **Does Mitch Hedberg's joke appear to hold in Texas?**
-It absolutely does! they are all clustered together, more so than in NC. Very interesting visual.
+It absolutely does! They are all clustered together, more so than in NC. Very interesting visual.
 
 
 **Compare North Carolina and Texas: In which state does the joke seem more accurate?**
 
 
-Oviously, the joke works a lot better in Texqs, just by examining the clustering.
+Obviously, the joke works a lot better in Texas, just by examining the clustering.
 
 🧶 ✅ ⬆️ **Knit, commit with message "Completed Exercises 11-12", and push your changes.**
 
